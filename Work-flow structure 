@@ -1,1 +1,59 @@
 //structure, functionality and objective of the agent 
+
+{
+  _id:        ObjectId
+  text:       String        ← chunk content
+  embedding:  Array[768]    ← Gemini embedding
+  source:     String        ← "first_aid.pdf"
+  category:   String        ← "medical/food/shelter"
+  chunk_id:   Int
+}
+
+Index: Atlas Vector Search
+  field: embedding
+  dimensions: 768
+  similarity: cosine
+
+Pre-load before demo:
+  → wilderness_first_aid.pdf
+  → survival_guide.pdf
+  → 100_emergency_recipes.json
+  → snake_bite_protocol.txt     ← for demo
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LAYER 6 — MONGODB MCP INTEGRATION
+───────────────────────────────────
+MCP Server: @mongodb/mcp-atlas-server
+
+Tool exposed: vector_search
+  input:  { query_embedding, top_k: 3 }
+  output: [ { text, source, score } ]
+
+Called by: Google Cloud Agent Builder
+  → Agent gets this tool automatically
+  → No manual API call needed
+  → Just configure MCP endpoint in Agent Builder
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BUILD ORDER (2 WEEKS)
+──────────────────────
+WEEK 1
+Day 1   MongoDB Atlas setup + vector index
+Day 2   Ingest pipeline (PDF → chunks → embed → store)
+Day 3   Single retrieval working end-to-end
+Day 4   Intent classifier + Emergency Mode
+Day 5   Multi-step planner working
+Day 6   Connect MCP to Google Cloud Agent Builder
+Day 7   Buffer / fix bugs
+
+WEEK 2
+Day 8   Basic frontend (just input box + response)
+Day 9   PDF upload UI working
+Day 10  Pre-load demo knowledge base
+Day 11  Deploy to Cloud Run
+Day 12  Record demo video
+Day 13  Polish README + Devpost submission
